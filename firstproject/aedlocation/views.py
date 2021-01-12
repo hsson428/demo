@@ -11,7 +11,7 @@ from django.core import serializers
 
 class HomeView(TemplateView):
     # template_name = 'stocks/home.html'        # ORM객체를 사용하는 화면
-    template_name = 'stocks/home2.html'  
+    template_name = 'home2.html'
 
 class SearchView2(View):
     def get(self, request, key):
@@ -26,13 +26,12 @@ class SearchView2(View):
 class StocksDetailView2(View):
     def get(self, request, pk):
 
-        import FinanceDataReader as fdr
-        from .stocks_repository import StocksRepository
+        from .aedlocation_repository import AedlocationRepository
         import json
 
-        stock = StocksRepository().select_stockmaster_by_symbol(pk)
+        aedlocation = AedlocationRepository().select_aedlocation_by_symbol(pk)
         
-        stock_info = fdr.DataReader(pk, '20200101').fillna('').reset_index()
+        detailed_aedlocation = fdr.DataReader(pk, '20200101').fillna('').reset_index()
         stock_info["Date"] = stock_info['Date'].astype('string')
         stock['stats'] = stock_info.values.tolist()
         serialized_stocks = json.dumps([stock], ensure_ascii=False) #

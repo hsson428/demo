@@ -18,9 +18,14 @@ from django.urls import path, include
 
 from .views import HomeView
 
+
+from .views import SearchView2
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', HomeView.as_view(), name='home'),
+
+    path('search2/<str:key>', SearchView2.as_view(), name='search'),
 
     path('aedlocation/', include('aedlocation.urls'))
 ]

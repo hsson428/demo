@@ -10,11 +10,11 @@ class AedlocationRepository:
         conn = pymysql.connect(**self.connection_info)
         cursor = conn.cursor()
 
-        sql = "select buildAddress, buildPlace from aedlocation where buildAddress like %s"
+        sql = "select Address from aedlocation where Address like %s"       # where DetailedAddress like %s 추가
         cursor.execute(sql, ("%" + name_key + "%",))
 
         rows = cursor.fetchall() # 반환 값은 tuple의 list [ (...), (...), ..., (...) ]
-        keys = ["buildAddress", "buildPlace"]
+        keys = ["Address"]
         result = []
         for row in rows:
             row_dict = { key:value for key, value in zip(keys, row) }
@@ -30,11 +30,11 @@ class AedlocationRepository:
         conn = pymysql.connect(**self.connection_info)
         cursor = conn.cursor()
 
-        sql = "select buildAddress, buildPlace from aedlocation where buildAddress like %s"
+        sql = "select Address, DetailedAddress from aedlocation where DetailedAddress like %s"
         cursor.execute(sql, (symbol,))
 
         row = cursor.fetchone() # 반환 값은 tuple (...)
-        keys = ["buildAddress", "buildPlace"]
+        keys = ["Address", "DetailedAddress"]
         
         result = { key:value for key, value in zip(keys, row) }
             

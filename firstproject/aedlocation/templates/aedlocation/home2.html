@@ -106,7 +106,7 @@ $(function(){
     //     }
     // });
 
-    list_td_names = ['buildAddress'];
+    list_td_names = ['Address'];
     list_tr_html_str = `<tr>
                         <td></td>
                     </tr>`; 
@@ -124,17 +124,17 @@ $(function(){
 
         // alert(key)
         $.ajax({
-            "url": "/aedlocation/search2/" + key,
+            "url": "/search2/" + key,
             "method": "GET",
             "dataType":"json",
             "success": function(data, status, xhr){
                 // alert(data);
-                $('#stocks_table tbody').empty()
+                $('#aedlocation_table tbody').empty()
                 
                 
                 for (var idx = 0; idx < data.length; idx++) { 
                     var tr = $(list_tr_html_str);
-                    tr.attr('data-symbol', data[idx].symbol)
+                    tr.attr('data-Address', data[idx].symbol)
                     var tds = tr.find('td');
                     tds.each(function(i, td) {
                         $(td).text(data[idx].list_td_names[i])
@@ -151,7 +151,7 @@ $(function(){
     });
 
     // 검색된 목록 테이블에서 행을 클릭하면 상세 보기
-    detail_td_names = ['buildAddress', 'buildPlace'];
+    detail_td_names = ['Address', 'DetailedAddress'];
     detail_tr_html_str = `<tr>
                             <td></td>
                             <td></td>
@@ -161,7 +161,7 @@ $(function(){
         event.preventDefault();     // 관행적으로 넣는 코드
         event.stopPropagation();
 
-        var symbol = $(this).attr('data-buildAddress');
+        var symbol = $(this).attr('data-DetailedAddress');
         // alert(symbol);
 
         $.ajax({
