@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block page_title %}
-<title>Stocks Home</title>
+<title>AED Location</title>
 {% endblock page_title %}
 
 {% block main_content %}
@@ -22,7 +22,7 @@
                                             <table id="aedlocation_table" class="table table-borderless table-striped table-earning">
                                                 <thead>
                                                     <tr>
-                                                        <th>Address</th>
+                                                        <th>주소</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -36,12 +36,12 @@
                             <div class="col-md-6">
                                 <div class="card border border-secondary" id="company_card">
                                     <div class="card-header">
-                                        <strong class="card-title" id="address_card_title">Company Name</strong>
+                                        <strong class="card-title" id="address_card_title">주소</strong>
                                     </div>
                                     <div class="card-body">
                                         
                                             <div class="top-campaign-x">
-                                                <h3 class="title-3 m-b-30">Basic Information</h3>
+                                                <h3 class="title-3 m-b-30">상세주소</h3>
                                                 <div class="table-responsive">
                                                     <table class="table table-top-campaign" id="address_detail_table">
                                                         <tbody>
@@ -60,18 +60,8 @@
                             <div class="col-lg-12">
                                 <div class="au-card m-b-30">
                                     <div class="au-card-inner">
-                                        <h3 class="title-2 m-b-40">Line Chart By Day</h3>
+                                        <h3 class="title-2 m-b-40">지도</h3>
                                         <canvas id="stock_line_chart"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="au-card m-b-30">
-                                    <div class="au-card-inner">
-                                        <h3 class="title-2 m-b-40">Bar chart By Day</h3>
-                                        <canvas id="stock_bar_chart"></canvas>
                                     </div>
                                 </div>
                             </div>
@@ -106,7 +96,7 @@ $(function(){
     //     }
     // });
 
-    list_td_names = ['Address'];
+    list_td_names = ['Address', 'num'];
     list_tr_html_str = `<tr>
                         <td></td>
                     </tr>`; 
@@ -124,7 +114,7 @@ $(function(){
 
         // alert(key)
         $.ajax({
-            "url": "/search2/" + key,
+            "url": "/aedlocation/search2/" + key,
             "method": "GET",
             "dataType":"json",
             "success": function(data, status, xhr){
@@ -134,10 +124,13 @@ $(function(){
                 
                 for (var idx = 0; idx < data.length; idx++) { 
                     var tr = $(list_tr_html_str);
-                    tr.attr('data-Address', data[idx].symbol)
+                    tr.attr('data-num', data[idx].num)
+
+                    tr.attr('data-Address', data[idx].Address)
+
                     var tds = tr.find('td');
                     tds.each(function(i, td) {
-                        $(td).text(data[idx].list_td_names[i])
+                        $(td).text(data[idx][list_td_names[i]])
                     });
                     $('#aedlocation_table tbody').append(tr);
 
@@ -151,7 +144,7 @@ $(function(){
     });
 
     // 검색된 목록 테이블에서 행을 클릭하면 상세 보기
-    detail_td_names = ['Address', 'DetailedAddress'];
+    detail_td_names = ['DetailedAddress'];
     detail_tr_html_str = `<tr>
                             <td></td>
                             <td></td>
@@ -161,20 +154,21 @@ $(function(){
         event.preventDefault();     // 관행적으로 넣는 코드
         event.stopPropagation();
 
-        var symbol = $(this).attr('data-DetailedAddress');
+        var num = $(this).attr('data-num');
+
+        var Address = $(this).attr('data-Address')
         // alert(symbol);
 
         $.ajax({
-            "url": "/aedlocation/detail2/" + symbol,
+            "url": "/aedlocation/detail2/" + num,
             "method": "GET",
             "success": function(data, status, xhr) {
                 // alert(data);
-                $('#address_card_title').text(data[0].name);
                 $('#address_detail_table').empty();
                 for (var idx = 0; idx < detail_td_names.length; idx++) {
                     var tr = $(detail_tr_html_str);
                     tds = tr.find('td');
-                    $(tds[0]).text(detail_td_names[idx]);
+                    $(tds[0]).text(Address,'\n');
                     if (detail_td_names[idx] === 'homepage') {
                         link = $('<a>' + data[0][detail_td_names[idx]] +'</a>');
                         link.attr('href', data[0][detail_td_names[idx]])
